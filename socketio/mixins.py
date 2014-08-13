@@ -29,8 +29,8 @@ class RoomsMixin(object):
 
     def emit_to_room(self, room, event, *args):
         """This is sent to all in the room (in this particular Namespace)"""
-        self.socket.manager.notify_endpoint(self.ns_name, 'room_emit', self.socket.sessid, room, event, *args)     
-        
+        self.socket.manager.notify_endpoint(self.ns_name, self.socket.sessid, 'room_emit', room, event, *args)     
+
     def room_listener(self, _manager, _endpoint, _event, sender_sessid, room, room_event, *args):
         #@todo This is slow
         rooms = self.session.get('rooms')
@@ -56,14 +56,14 @@ class BroadcastMixin(object):
         This is sent to all in the sockets in this particular Namespace,
         including itself.
         """
-        self.socket.manager.notify_endpoint(self.ns_name, 'broadcast', self.socket.sessid, event, *args)
-        
+        self.socket.manager.notify_endpoint(self.ns_name, self.socket.sessid, 'broadcast', event,  *args)
+
     def broadcast_event_not_me(self, event, *args):
         """
         This is sent to all the sockets in this particular Namespace,
         except itself.
         """
-        self.socket.manager.notify_endpoint(self.ns_name, 'broadcast', self.socket.sessid, event, *args, not_me = True)
+        self.socket.manager.notify_endpoint(self.ns_name, self.socket.sessid, 'broadcast', event, *args, not_me = True)
         
     def broadcast_listener(self, _manager, _endpoint, _event, sender_sessid, broadcast_event, *args, **kwargs):
         not_me = kwargs.get('not_me', False)

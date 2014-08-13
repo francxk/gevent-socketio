@@ -287,7 +287,7 @@ class RedisSocketManager(BaseSocketManager):
         args = msg.get('args', [])
         kwargs = msg.get('kwargs', {})
         #notify the local listeners
-        super(RedisSocketManager, self).notify_endpoint(endpoint, event, *args, sender = sessid, **kwargs)
+        super(RedisSocketManager, self).notify_endpoint(endpoint, event, sessid, *args,  **kwargs)
         
     def _orphan_cleaner(self):
         """This will check and cleanup sockets' data that is left orphaned in Redis due to sockets somehow not being 

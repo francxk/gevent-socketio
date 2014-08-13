@@ -17,7 +17,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'chat.db',
+        'NAME':  os.path.join(PROJECT_ROOT,'chat.db'),
     }
 }
 
@@ -37,6 +37,17 @@ MIDDLEWARE_CLASSES = (
 )
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, '..', 'chat', 'static/');
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+
 ROOT_URLCONF = "urls"
 TEMPLATE_DIRS = full_path("templates")
 LOGIN_URL = "/admin/"

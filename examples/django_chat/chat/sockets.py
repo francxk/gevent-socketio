@@ -6,7 +6,6 @@ from socketio.sdjango import namespace
 
 @namespace('/chat')
 class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
-    nicknames = []
 
     def initialize(self):
         self.logger = logging.getLogger("socketio.chat")
@@ -27,11 +26,15 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         if nicknames is None:
             nicknames = set()
         nicknames.add(nickname)
+        self.log("nicknames = %s"% nicknames)
         self.session['nicknames'] = nicknames
         
         self.broadcast_event('announcement', '%s has connected' % nickname)
         self.broadcast_event('nicknames', list(nicknames))
         return True, nickname
+
+        
+        return True
 
     def recv_disconnect(self):
         # Remove nickname from the list.
@@ -43,11 +46,11 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                 nicknames.remove(nickname)
             self.session['nicknames'] = nicknames
         self.broadcast_event('announcement', '%s has disconnected' % nickname)
-        self.broadcast_event('nicknames', list(self.nicknames))
+        self.broadcast_event('nicknames', list(self.session['nicknames']))
         self.disconnect(silent=True)
         return True
 
     def on_user_message(self, room, msg):
-        self.log('User message: {0}'.format(msg))
+        self.log('User message: {0} to room {1}'.format(msg,room))
         self.emit_to_room(room, 'msg_to_room', self.session['nickname'], msg)
         return True
